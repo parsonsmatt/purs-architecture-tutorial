@@ -11,11 +11,7 @@ import qualified React as R
 import qualified React.DOM as R
 import qualified React.DOM.Props as RP
 
-import qualified DOM as DOM
-import qualified DOM.HTML as DOM
-import qualified DOM.HTML.Document as DOM
-import qualified DOM.HTML.Types as DOM
-import qualified DOM.HTML.Window as DOM
+import qualified DOMImport as DOM
 
 type Model = Int
 
