@@ -1,4 +1,4 @@
-module Example.One where
+module Example.OneProps where
 
 import Prelude
 
@@ -36,13 +36,10 @@ view send state _ _ =
         ]
 
 performAction :: T.PerformAction _ Model _ Action
-performAction _ action =
-    T.modifyState (update action)
+performAction props action =
+    props.send action
 
 spec :: T.Spec _ Model _ Action
 spec = T.simpleSpec 0 performAction view
 
 factory = R.createFactory (T.createClass spec) 
-
-renderCounter :: forall eff. _ -> Eff (dom :: DOM.DOM | eff) R.ReactElement
-renderCounter = R.render (R.createFactory (T.createClass spec) 0)

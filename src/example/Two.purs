@@ -1,6 +1,6 @@
 module Example.Two where
 
-import Prelude ((<<<))
+import Prelude ((<<<), pure)
 import Control.Monad.Eff
 
 import qualified Example.One as One
@@ -28,7 +28,7 @@ data Action
     | Top One.Action
     | Bottom One.Action
 
-update :: Action -> Model -> Model
+update :: Action -> Model -> Model 
 update Reset _ =
     init 0 0
 update (Top action) model =
@@ -39,8 +39,8 @@ update (Bottom action) model =
 view :: T.Render _ Model _ Action
 view send state _ _ =
     R.div'
-        [ One.view (\a -> send (Top a)) state.topCounter [] []
-        , One.view (send <<< Top) state.bottomCounter [] []
+        [ One.factory state.topCounter
+        , One.factory state.bottomCounter
         , R.button [ RP.onClick \_ -> send Reset ]
                    [ R.text "RESET" ]
         ]
