@@ -2,10 +2,14 @@ module Main where
 
 import Prelude
 
-import Control.Monad.Eff
-import Control.Monad.Eff.Console
+import Control.Monad.Aff (runAff)
 
-import qualified Example.One as Ex1
-import qualified Example.Two as Ex2
+import Halogen
+import Halogen.Util (appendToBody)
+import Control.Monad.Eff.Exception (throwException)
 
-main = log "wat"
+import qualified Example.Zero as Ex0
+
+main = runAff throwException (const (pure unit)) $ do
+    node <- runUI Ex0.ui unit
+    appendToBody node.node
