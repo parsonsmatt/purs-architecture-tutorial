@@ -1,4 +1,4 @@
-module Example.One where
+module Example.Counter where
 
 import Prelude
 
@@ -13,6 +13,7 @@ type State =
 data Input a
     = Increment a
     | Decrement a
+    | Reset a
 
 init :: Int -> State
 init i = { count: i }
@@ -35,4 +36,7 @@ ui = component render eval
             pure next
         eval (Decrement next) = do
             modify (\state -> state { count = state.count - 1 })
+            pure next
+        eval (Reset next) = do
+            modify (const (init 0))
             pure next
