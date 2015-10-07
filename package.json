@@ -1,0 +1,26 @@
+{
+  "name": "purs-architecture-tutorial",
+  "version": "1.0.0",
+  "description": "A port of the [Elm Architecture Tutorial](https://github.com/evancz/elm-architecture-tutorial/) to PureScript.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "virtual-dom": "^2.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parsonsmatt/purs-architecture-tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parsonsmatt/purs-architecture-tutorial/issues"
+  },
+  "homepage": "https://github.com/parsonsmatt/purs-architecture-tutorial#readme"
+}
