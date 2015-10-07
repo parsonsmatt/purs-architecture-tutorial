@@ -12,13 +12,13 @@ import qualified Example.Counter as Counter
 import Example.Two (CounterSlot(..))
 
 type State =
-    { counterList :: Array Int
+    { counterArray :: Array Int
     , nextID :: Int
     }
 
 initialState :: State
 initialState =
-    { counterList: []
+    { counterArray: []
     , nextID: 0
     }
 
@@ -32,7 +32,7 @@ listUI = component render eval
     where
         render state = 
             H.div_ [ H.h1_ [ H.text "Counters" ]
-                   , H.ul_ $ map (H.slot <<< CounterSlot) state.counterList
+                   , H.ul_ $ map (H.slot <<< CounterSlot) state.counterArray
                    , H.button [ E.onClick $ E.input_ AddCounter ]
                               [ H.text "Add Counter" ]
                    , H.button [ E.onClick $ E.input_ RemoveCounter ]
@@ -48,13 +48,13 @@ listUI = component render eval
 
 addCounter :: State -> State
 addCounter s =
-    s { counterList = s.nextID `cons` s.counterList
+    s { counterArray = s.nextID : s.counterArray
       , nextID = s.nextID + 1
       }
 
 removeCounter :: State -> State
 removeCounter s =
-    s { counterList = drop 1 s.counterList
+    s { counterArray = drop 1 s.counterArray
       , nextID = s.nextID - 1
       }
 
