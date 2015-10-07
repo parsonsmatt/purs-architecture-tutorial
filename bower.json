@@ -12,6 +12,6 @@
   ],
   "dependencies": {
     "purescript-console": "^0.1.0",
-    "purescript-halogen": "git@github.com:slamdata/purescript-halogen.git#master"
+    "purescript-halogen": "purescript-halogen#master"
   }
 }
