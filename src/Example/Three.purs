@@ -30,6 +30,7 @@ listUI :: forall g p. (Functor g)
        => ParentComponent State Counter.State Input Counter.Input g CounterSlot p
 listUI = component render eval
     where
+        render :: Render State Input CounterSlot
         render state = 
             H.div_ [ H.h1_ [ H.text "Counters" ]
                    , H.ul_ $ map (H.slot <<< CounterSlot) state.counterArray
