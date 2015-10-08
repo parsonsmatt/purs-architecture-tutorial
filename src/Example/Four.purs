@@ -39,9 +39,9 @@ listRemUI = component' render eval peek
         peek (ChildF counterSlot queryAction) =
             case runCoproduct queryAction of
                  Left (Counter.Remove _) ->
-                    modify $ removeCounter counterSlot
+                     modify (removeCounter counterSlot)
                  _ ->
-                    pure unit
+                     pure unit
 
 removeCounter :: CounterSlot -> State -> State
 removeCounter (CounterSlot index) state =
