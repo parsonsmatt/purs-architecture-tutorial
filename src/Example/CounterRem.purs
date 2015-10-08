@@ -10,16 +10,11 @@ import qualified Halogen.HTML.Events.Indexed as E
 import Example.Two (CounterSlot(..))
 import qualified Example.Counter as Counter
 
-type State = Unit
-
 data Input a
     = Remove a
 
-init :: State
-init = unit
-
 withRemove :: forall g p. (Functor g)
-           => ParentComponent State Counter.State Input Counter.Input g CounterSlot p
+           => ParentComponent Unit Counter.State Input Counter.Input g CounterSlot p
 withRemove = component render eval
     where
         render _ =
@@ -27,10 +22,11 @@ withRemove = component render eval
                    , H.button [ E.onClick $ E.input_ Remove ]
                               [ H.text "Remove" ]
                    ]
+        eval :: EvalP Input Unit Counter.State Input Counter.Input g CounterSlot p
         eval (Remove a) = pure a
 
 ui :: forall g p. (Plus g)
-   => InstalledComponent State Counter.State Input Counter.Input g CounterSlot p
+   => InstalledComponent Unit Counter.State Input Counter.Input g CounterSlot p
 ui = install withRemove mkCounter
     where
         mkCounter (CounterSlot _) = createChild Counter.ui (Counter.init 0)
