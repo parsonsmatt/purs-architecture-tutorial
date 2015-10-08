@@ -14,7 +14,7 @@ import qualified Halogen.HTML.Events.Indexed as E
 import qualified Example.Counter as CC
 import qualified Example.CounterRem as Counter
 import Example.Two (CounterSlot(..))
-import Example.Three (State(..), addCounter, initialState)
+import Example.Three (State(), addCounter, initialState)
 
 data Input a = AddCounter a
 
@@ -36,8 +36,8 @@ listRemUI = component' render eval peek
             pure next
 
         peek :: Peek State (Counter.StateMiddle g p) Input Counter.QueryMiddle g CounterSlot p
-        peek (ChildF counterSlot queryAction) =
-            case runCoproduct queryAction of
+        peek (ChildF counterSlot (Coproduct queryAction)) =
+            case queryAction of
                  Left (Counter.Remove _) ->
                      modify (removeCounter counterSlot)
                  _ ->
@@ -51,6 +51,5 @@ ui :: forall g p. (Plus g)
    => InstalledComponent State (Counter.StateMiddle g p) Input Counter.QueryMiddle g CounterSlot p
 ui = install' listRemUI mkCounter
     where
-        mkCounter :: CounterSlot -> Tuple (ComponentP _ _ g _ _) _
         mkCounter (CounterSlot _) =
             createChild Counter.ui (installedState unit)
