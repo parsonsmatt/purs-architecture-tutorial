@@ -2,6 +2,7 @@ module Example.CounterRem where
 
 import Prelude
 import Control.Plus (Plus)
+import Data.Functor.Coproduct
 
 import Halogen
 import qualified Halogen.HTML.Indexed as H
@@ -13,8 +14,15 @@ import qualified Example.Counter as Counter
 data Input a
     = Remove a
 
+type State = Unit
+
+type StateMiddle g p =
+    InstalledState State Counter.State Input Counter.Input g CounterSlot p
+type QueryMiddle p =
+    Coproduct Input (ChildF CounterSlot Counter.Input)
+
 withRemove :: forall g p. (Functor g)
-           => ParentComponent Unit Counter.State Input Counter.Input g CounterSlot p
+           => ParentComponent State Counter.State Input Counter.Input g CounterSlot p
 withRemove = component render eval
     where
         render _ =
@@ -26,7 +34,7 @@ withRemove = component render eval
         eval (Remove a) = pure a
 
 ui :: forall g p. (Plus g)
-   => InstalledComponent Unit Counter.State Input Counter.Input g CounterSlot p
+   => Component StateMiddle QueryMiddle Counter.Input g p
 ui = install withRemove mkCounter
     where
         mkCounter (CounterSlot _) = createChild Counter.ui (Counter.init 0)
