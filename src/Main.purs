@@ -21,7 +21,8 @@ main = runAff throwException (const (pure unit)) $ do
     -- app <- runEx1
     -- app <- runEx2
     -- app <- runEx3
-    app <- runRemCounter
+    -- app <- runRemCounter
+    app <- runEx4
     appendToBody app.node
 
 runEx0 = runUI Ex0.ui unit
@@ -29,4 +30,4 @@ runEx1 = runUI Ex1.ui (Ex1.init 0)
 runEx2 = runUI Ex2.ui (installedState (Ex2.init))
 runEx3 = runUI Ex3.ui (installedState (Ex3.initialState))
 runRemCounter = runUI CR.ui (installedState unit)
--- runEx4 = runUI Ex4.ui (installedState (Ex3.initialState))
+runEx4 = runUI Ex4.ui (installedState (Ex3.initialState))

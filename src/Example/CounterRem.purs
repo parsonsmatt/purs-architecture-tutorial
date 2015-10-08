@@ -18,23 +18,23 @@ type State = Unit
 
 type StateMiddle g p =
     InstalledState State Counter.State Input Counter.Input g CounterSlot p
-type QueryMiddle p =
-    Coproduct Input (ChildF CounterSlot Counter.Input)
+type QueryMiddle = Coproduct Input (ChildF CounterSlot Counter.Input)
 
 withRemove :: forall g p. (Functor g)
            => ParentComponent State Counter.State Input Counter.Input g CounterSlot p
 withRemove = component render eval
     where
+        render :: Render State Input CounterSlot
         render _ =
             H.div_ [ H.slot (CounterSlot 0)
                    , H.button [ E.onClick $ E.input_ Remove ]
                               [ H.text "Remove" ]
                    ]
-        eval :: EvalP Input Unit Counter.State Input Counter.Input g CounterSlot p
+        eval :: EvalP Input State Counter.State Input Counter.Input g CounterSlot p
         eval (Remove a) = pure a
 
 ui :: forall g p. (Plus g)
-   => Component StateMiddle QueryMiddle Counter.Input g p
+   => Component (StateMiddle g p) QueryMiddle g p
 ui = install withRemove mkCounter
     where
         mkCounter (CounterSlot _) = createChild Counter.ui (Counter.init 0)
