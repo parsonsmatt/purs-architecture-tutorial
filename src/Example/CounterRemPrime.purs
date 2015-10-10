@@ -2,13 +2,9 @@ module Example.CounterRemPrime where
 
 import Prelude
 import Control.Plus (Plus)
-import Data.Functor.Coproduct
 
 import Halogen
-import qualified Halogen.HTML.Indexed as H
-import qualified Halogen.HTML.Events.Indexed as E
 
-import Example.Two (CounterSlot(..))
 import qualified Example.Counter as Counter
 import qualified Example.RemGeneric as Rem
 
