@@ -1,23 +1,25 @@
-module Example.Four where
+module Example.FourPrime where
 
 import Prelude
+import Data.Tuple
 import Data.Either
 import Data.Functor.Coproduct
-import Data.Array (filter)
+import Data.Array
 import Control.Plus (Plus)
 
 import Halogen
 import qualified Halogen.HTML.Indexed as H
 import qualified Halogen.HTML.Events.Indexed as E
 
-import qualified Example.CounterRem as Counter
+import qualified Example.CounterRemPrime as Counter
+import qualified Example.RemGeneric as Rem
 import Example.Two (CounterSlot(..))
 import Example.Three (State(), addCounter, initialState)
 
 data Input a = AddCounter a
 
 listRemUI :: forall g p. (Functor g)
-          => ParentComponentP State (Counter.StateMiddle g p) Input Counter.QueryMiddle g CounterSlot p
+          => ParentComponentP State (Counter.State g p) Input Counter.Query g CounterSlot p
 listRemUI = component' render eval peek
     where
         render :: Render State Input CounterSlot
@@ -36,7 +38,7 @@ listRemUI = component' render eval peek
         peek :: Peek State _ Input _ g CounterSlot p
         peek (ChildF counterSlot (Coproduct queryAction)) =
             case queryAction of
-                 Left (Counter.Remove _) ->
+                 Left (Rem.Remove _) ->
                      modify (removeCounter counterSlot)
                  _ ->
                      pure unit
@@ -46,7 +48,7 @@ removeCounter (CounterSlot index) state =
     state { counterArray = filter (/= index) state.counterArray }
 
 ui :: forall g p. (Plus g)
-   => InstalledComponent State (Counter.StateMiddle g p) Input Counter.QueryMiddle g CounterSlot p
+   => InstalledComponent State (Counter.State g p) Input Counter.Query g CounterSlot p
 ui = install' listRemUI mkCounter
     where
         mkCounter (CounterSlot _) =
