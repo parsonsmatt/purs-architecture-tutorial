@@ -2,7 +2,7 @@ module Example.RemGeneric where
 
 import Prelude
 import Control.Plus (Plus)
-import Data.Functor.Coproduct
+import Data.Functor.Coproduct (Coproduct(..))
 
 import Halogen
 import qualified Halogen.HTML.Indexed as H
@@ -40,5 +40,3 @@ addRemove :: forall s f g p. (Plus g)
 addRemove comp state = install withRemove mkChild
     where
         mkChild _ = createChild comp state
-
-      
