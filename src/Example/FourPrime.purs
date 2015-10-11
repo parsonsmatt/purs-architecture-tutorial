@@ -1,10 +1,9 @@
 module Example.FourPrime where
 
 import Prelude
-import Data.Tuple
 import Data.Either
 import Data.Functor.Coproduct
-import Data.Array
+import Data.Array (filter)
 import Control.Plus (Plus)
 
 import Halogen
