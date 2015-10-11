@@ -15,6 +15,7 @@ import qualified Example.Three as Ex3
 import qualified Example.Four as Ex4
 import qualified Example.CounterRem as CR
 import qualified Example.Five as Ex5
+import qualified Example.Six as Ex6
 
 main = runAff throwException (const (pure unit)) $ do
     -- app <- runEx0
@@ -23,7 +24,8 @@ main = runAff throwException (const (pure unit)) $ do
     -- app <- runEx3
     -- app <- runRemCounter
     -- app <- runEx4
-    app <- runEx5
+    -- app <- runEx5
+    app <- runEx6
     appendToBody app.node
 
 runEx0 = runUI Ex0.ui unit
@@ -33,3 +35,4 @@ runEx3 = runUI Ex3.ui (installedState (Ex3.initialState))
 runRemCounter = runUI CR.ui (installedState unit)
 runEx4 = runUI Ex4.ui (installedState (Ex3.initialState))
 runEx5 = runUI Ex5.ui Ex5.initialState
+runEx6 = runUI Ex6.ui (installedState unit)
