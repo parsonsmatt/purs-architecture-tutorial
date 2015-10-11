@@ -40,13 +40,13 @@ listUI = component render eval
         , H.button [ E.onClick $ E.input_ RemoveCounter ]
                    [ H.text "Remove Counter" ]
         ]
-      eval :: EvalP Input State Counter.State Input Counter.Input g CounterSlot p
-      eval (AddCounter next) = do
-        modify addCounter
-        pure next
-      eval (RemoveCounter next) = do
-        modify removeCounter
-        pure next
+    eval :: EvalP Input State Counter.State Input Counter.Input g CounterSlot p
+    eval (AddCounter next) = do
+      modify addCounter
+      pure next
+    eval (RemoveCounter next) = do
+      modify removeCounter
+      pure next
 
 addCounter :: State -> State
 addCounter s =

@@ -41,11 +41,11 @@ pairUI = component render eval
                         [ H.text "Reset!" ]
              ]
 
-        eval :: EvalP Input State Ex1.State Input Ex1.Input g CounterSlot p
-        eval (Reset next) = do
-          query (CounterSlot 0) (action Ex1.Reset)
-          query (CounterSlot 1) (action Ex1.Reset)
-          pure next
+    eval :: EvalP Input State Ex1.State Input Ex1.Input g CounterSlot p
+    eval (Reset next) = do
+      query (CounterSlot 0) (action Ex1.Reset)
+      query (CounterSlot 1) (action Ex1.Reset)
+      pure next
 
 ui :: forall g p. (Plus g) => InstalledComponent State Ex1.State Input Ex1.Input g CounterSlot p
 ui = install pairUI mkCounter

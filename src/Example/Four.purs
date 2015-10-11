@@ -29,18 +29,18 @@ listRemUI = component' render eval peek
                    [ H.text "Add Counter" ]
         ]
 
-        eval :: EvalP Input State _ Input _ g CounterSlot p
-        eval (AddCounter next) = do
-          modify addCounter
-          pure next
+    eval :: EvalP Input State _ Input _ g CounterSlot p
+    eval (AddCounter next) = do
+      modify addCounter
+      pure next
 
-        peek :: Peek State _ Input _ g CounterSlot p
-        peek (ChildF counterSlot (Coproduct queryAction)) =
-          case queryAction of
-               Left (Counter.Remove _) ->
-                 modify (removeCounter counterSlot)
-               _ ->
-                 pure unit
+    peek :: Peek State _ Input _ g CounterSlot p
+    peek (ChildF counterSlot (Coproduct queryAction)) =
+      case queryAction of
+           Left (Counter.Remove _) ->
+             modify (removeCounter counterSlot)
+           _ ->
+             pure unit
 
 removeCounter :: CounterSlot -> State -> State
 removeCounter (CounterSlot index) state =
