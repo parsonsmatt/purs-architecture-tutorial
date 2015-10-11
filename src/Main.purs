@@ -38,4 +38,4 @@ runRemCounter = runUI CR.ui (installedState unit)
 runEx4 = runUI Ex4.ui (installedState (Ex3.initialState))
 runEx5 = runUI Ex5.ui Ex5.initialState
 runEx6 = runUI Ex6.ui (installedState unit)
-runEx7 = runUI (Ex7.makeList Ex5.ui Ex5.initialState) (installedState Ex7.initialState)
+runEx7 = runUI (Ex7.makeList Ex5.ui Ex5.initialState) Ex7.initialState

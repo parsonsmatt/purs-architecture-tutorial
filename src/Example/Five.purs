@@ -8,8 +8,6 @@ import Control.Monad.Aff (Aff(), runAff)
 import Control.Monad.Eff
 import Control.Monad.Free (liftFI)
 import Data.Foreign.Class (readProp)
-import Network.HTTP.RequestHeader
-import Network.HTTP.MimeType.Common (applicationJSON)
 
 import Halogen
 import qualified Halogen.HTML.Indexed as H

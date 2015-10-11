@@ -14,7 +14,7 @@ data Input a = NoOp a
 pairUI :: forall p. ParentComponent Unit Gif.State Input Gif.Input (Aff (Gif.GifEffects ())) Boolean p
 pairUI = component render eval
   where
-    render s =
+    render _ =
       H.div_
         [ H.slot true
         , H.slot false

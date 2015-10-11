@@ -17,8 +17,8 @@ type StateP =
   , nextID :: Int
   }
 
-initialState :: StateP
-initialState =
+initialStateP :: StateP
+initialStateP =
   { itemArray: []
   , nextID: 0
   }
@@ -70,6 +70,9 @@ type State s f g p =
 
 type Query f =
   Coproduct QueryP (ChildF Slot f)
+
+initialState :: forall s f g p. State s f g p
+initialState = installedState initialStateP
 
 makeList :: forall s f g p. (Plus g)
          => Component s f g p
