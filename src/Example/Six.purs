@@ -9,7 +9,6 @@ import qualified Halogen.HTML.Indexed as H
 
 import qualified Example.Five as Gif
 
-
 data Input a = NoOp a
 
 pairUI :: forall p. ParentComponent Unit Gif.State Input Gif.Input (Aff (Gif.GifEffects ())) Boolean p

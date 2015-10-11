@@ -12,6 +12,5 @@ type State g p = Rem.State Counter.State Counter.Input g p
 type Query = Rem.Query Counter.Input
 
 ui :: forall g p. (Plus g)
-   => Component (Rem.State Counter.State Counter.Input g p)
-                (Rem.Query Counter.Input) g p
+   => Component (State g p) Query g p
 ui = Rem.addRemove Counter.ui (Counter.init 0)
