@@ -10,9 +10,11 @@ import qualified Halogen.HTML.Events.Indexed as E
 
 data QueryP a = Remove a
 
-type ChildSlot = Unit
+type State s f g =
+  InstalledState Unit s QueryP f g Unit
 
-type StateP = Unit
+type Query f =
+  Coproduct QueryP (ChildF Unit f)
 
 addRemove :: forall g s f. (Plus g)
           => Component s f g
@@ -26,11 +28,5 @@ addRemove comp state = parentComponent render eval
           , H.button [ E.onClick $ E.input_ Remove ]
                      [ H.text "Remove" ]
           ]
-    eval :: EvalParent QueryP StateP s QueryP f g ChildSlot
+    eval :: EvalParent QueryP Unit s QueryP f g Unit
     eval (Remove a) = pure a
-
-type State s f g =
-  InstalledState StateP s QueryP f g ChildSlot
-
-type Query f =
-  Coproduct QueryP (ChildF ChildSlot f)

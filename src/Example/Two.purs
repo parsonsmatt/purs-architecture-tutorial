@@ -41,13 +41,17 @@ ui :: forall g. (Plus g)
 ui = parentComponent render eval
   where
     render state =
-      H.div_ [ H.slot state.topCounter \_ -> { component: Ex1.ui, initialState: Ex1.init 0 }
-             , H.slot state.bottomCounter \_ -> { component: Ex1.ui, initialState: Ex1.init 0 }
-             , H.button [ E.onClick $ E.input_ Reset ]
-                        [ H.text "Reset!" ]
-             ]
+      H.div_
+        [ H.slot state.topCounter mkCounter
+        , H.slot state.bottomCounter mkCounter 
+        , H.button [ E.onClick $ E.input_ Reset ]
+                   [ H.text "Reset!" ]
+        ]
 
-    eval :: EvalParent Input StateP Ex1.State Input Ex1.Input g CounterSlot
+    mkCounter :: Unit -> { component :: Component Ex1.State Ex1.Input g, initialState :: Ex1.State }
+    mkCounter _ = { component: Ex1.ui, initialState: Ex1.init 0 }
+
+    eval :: EvalParent _ _ _ _ _ g _
     eval (Reset next) = do
       query (CounterSlot 0) (action Ex1.Reset)
       query (CounterSlot 1) (action Ex1.Reset)

@@ -14,13 +14,13 @@ import qualified Example.Counter as Counter
 
 data Input a = Remove a
 
-type StateP g =
+type State g =
   InstalledState Unit Counter.State Input Counter.Input g CounterSlot
-type QueryP =
+type Query =
   Coproduct Input (ChildF CounterSlot Counter.Input)
 
 ui :: forall g. (Plus g)
-   => Component (StateP g) QueryP g
+   => Component (State g) Query g
 ui = parentComponent render eval
   where
     render _ =
@@ -31,7 +31,3 @@ ui = parentComponent render eval
           ]
     eval :: EvalParent Input Unit Counter.State Input Counter.Input g CounterSlot
     eval (Remove a) = pure a
-
-type StateMiddle g =
-    InstalledState Unit Counter.State Input Counter.Input g CounterSlot
-type QueryMiddle = Coproduct Input (ChildF CounterSlot Counter.Input)

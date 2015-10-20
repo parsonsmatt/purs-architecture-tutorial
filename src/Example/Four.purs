@@ -12,20 +12,18 @@ import qualified Halogen.HTML.Events.Indexed as E
 
 import qualified Example.CounterRem as Counter
 import Example.Two (CounterSlot(..))
-import Example.Three (State(), mslot, addCounter, initialState)
+import Example.Three (StateP(), mslot, addCounter, initialState)
 
 data Input a = AddCounter a
 
-type StateP g =
-  InstalledState State (Counter.StateMiddle g) Input Counter.QueryMiddle g CounterSlot
+type State g =
+  InstalledState StateP (Counter.State g) Input Counter.Query g CounterSlot
 
-type QueryP =
-  Coproduct Input (ChildF CounterSlot Counter.QueryMiddle)
-
-mapSlot slot comp state index = mslot (slot index) comp state
+type Query =
+  Coproduct Input (ChildF CounterSlot Counter.Query)
 
 ui :: forall g. (Plus g)
-   => Component (StateP g) QueryP g
+   => Component (State g) Query g
 ui = parentComponent' render eval peek
   where
     render state =
@@ -41,7 +39,7 @@ ui = parentComponent' render eval peek
       modify addCounter
       pure next
 
-    peek :: Peek (ChildF CounterSlot Counter.QueryP) State (Counter.StateP g) Input Counter.QueryP g CounterSlot
+    peek :: Peek (ChildF CounterSlot Counter.Query) StateP (Counter.State g) Input Counter.Query g CounterSlot
     peek (ChildF counterSlot (Coproduct queryAction)) =
       case queryAction of
         Left (Counter.Remove _) ->
@@ -49,6 +47,8 @@ ui = parentComponent' render eval peek
         _ ->
           pure unit
 
-removeCounter :: CounterSlot -> State -> State
+mapSlot slot comp state index = mslot (slot index) comp state
+
+removeCounter :: CounterSlot -> StateP -> StateP
 removeCounter (CounterSlot index) state =
   state { counterArray = filter (/= index) state.counterArray }

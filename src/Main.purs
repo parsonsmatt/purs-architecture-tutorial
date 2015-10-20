@@ -32,10 +32,10 @@ main = runAff throwException (const (pure unit)) $ do
 
 runEx0 = runUI Ex0.ui unit
 runEx1 = runUI Ex1.ui (Ex1.init 0)
-runEx2 = runUI Ex2.ui (installedState (Ex2.init))
-runEx3 = runUI Ex3.ui (installedState (Ex3.initialState))
+runEx2 = runUI Ex2.ui (installedState Ex2.init)
+runEx3 = runUI Ex3.ui (installedState Ex3.initialState)
 runRemCounter = runUI CR.ui (installedState unit)
-runEx4 = runUI Ex4.ui (installedState (Ex3.initialState))
+runEx4 = runUI Ex4.ui (installedState Ex3.initialState)
 runEx5 = runUI Ex5.ui Ex5.initialState
 runEx6 = runUI Ex6.ui (installedState unit)
 runEx7 = runUI (Ex7.makeList Ex5.ui Ex5.initialState) Ex7.initialState

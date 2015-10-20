@@ -12,13 +12,13 @@ import qualified Example.Five as Gif
 
 data Input a = NoOp a
 
-type StateP =
+type State =
   InstalledState Unit Gif.State Input Gif.Input (Aff (Gif.GifEffects ())) Boolean
 
-type QueryP =
+type Query =
   Coproduct Input (ChildF Boolean Gif.Input)
 
-ui :: Component StateP QueryP (Aff (Gif.GifEffects ()))
+ui :: Component State Query (Aff (Gif.GifEffects ()))
 ui = parentComponent render eval
   where
     render _ =
