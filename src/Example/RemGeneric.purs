@@ -14,30 +14,23 @@ type ChildSlot = Unit
 
 type StateP = Unit
 
-withRemove :: forall g p s' f'. (Functor g)
-           => ParentComponent StateP s' QueryP f' g ChildSlot p
-withRemove = component render eval
+addRemove :: forall g s f. (Plus g)
+          => Component s f g
+          -> s
+          -> Component (State s f g) (Query f) g
+addRemove comp state = parentComponent render eval
   where
-    render :: Render StateP QueryP ChildSlot
     render _ =
         H.div_ 
-          [ H.slot unit
+          [ H.slot unit \_ -> { component: comp, initialState: state } 
           , H.button [ E.onClick $ E.input_ Remove ]
                      [ H.text "Remove" ]
           ]
-    eval :: EvalP QueryP StateP s' QueryP f' g ChildSlot p
+    eval :: EvalParent QueryP StateP s QueryP f g ChildSlot
     eval (Remove a) = pure a
 
-type State s f g p =
-  InstalledState StateP s QueryP f g ChildSlot p
+type State s f g =
+  InstalledState StateP s QueryP f g ChildSlot
 
 type Query f =
   Coproduct QueryP (ChildF ChildSlot f)
-
-addRemove :: forall s f g p. (Plus g)
-          => Component s f g p 
-          -> s 
-          -> Component (State s f g p) (Query f) g p
-addRemove comp state = install withRemove mkChild
-  where
-    mkChild _ = createChild comp state

@@ -2,6 +2,7 @@ module Example.Three where
 
 import Prelude
 import Data.Array
+import Data.Functor.Coproduct (Coproduct(..))
 import Control.Plus (Plus)
 
 import Halogen
@@ -26,21 +27,29 @@ data Input a
   = AddCounter a
   | RemoveCounter a
 
-listUI :: forall g p. (Functor g)
-       => ParentComponent State Counter.State Input Counter.Input g CounterSlot p
-listUI = component render eval
+type StateP g =
+  InstalledState State Counter.State Input Counter.Input g CounterSlot
+
+type QueryP =
+  Coproduct Input (ChildF CounterSlot Counter.Input)
+
+mslot :: forall s f g p i. p -> Component s f g -> s -> HTML (SlotConstructor s f g p) i
+mslot slot comp state = H.slot slot \_ -> { component: comp, initialState: state }
+
+ui :: forall g. (Plus g)
+   => Component (StateP g) QueryP g
+ui = parentComponent render eval
   where
-    render :: Render State Input CounterSlot
     render state = 
       H.div_ 
         [ H.h1_ [ H.text "Counters" ]
-        , H.ul_ $ map (H.slot <<< CounterSlot) state.counterArray
+        , H.ul_ $ map (\i -> mslot (CounterSlot i) Counter.ui (Counter.init 0)) state.counterArray
         , H.button [ E.onClick $ E.input_ AddCounter ]
                    [ H.text "Add Counter" ]
         , H.button [ E.onClick $ E.input_ RemoveCounter ]
                    [ H.text "Remove Counter" ]
         ]
-    eval :: EvalP Input State Counter.State Input Counter.Input g CounterSlot p
+    eval :: EvalParent Input State Counter.State Input Counter.Input g CounterSlot
     eval (AddCounter next) = do
       modify addCounter
       pure next
@@ -59,8 +68,3 @@ removeCounter s =
   s { counterArray = drop 1 s.counterArray
     , nextID = s.nextID - 1
     }
-
-ui :: forall g p. (Plus g) => InstalledComponent State Counter.State Input Counter.Input g CounterSlot p
-ui = install listUI mkCounter
-  where
-    mkCounter (CounterSlot _) = createChild Counter.ui (Counter.init 0)

@@ -43,10 +43,10 @@ giphyRequestUrl topic = mconcat
   , "&api_key=", giphyKey
   ]
 
-ui :: forall p. Component State Input (Aff (GifEffects ())) p
+ui :: Component State Input (Aff (GifEffects ()))
 ui = component render eval
   where
-    render :: Render State Input p
+    render :: Render State Input
     render state =
       H.div_
         [ H.h2_ [ H.text state.topic ]
@@ -58,14 +58,12 @@ ui = component render eval
     eval :: Eval Input State Input (Aff (GifEffects ()))
     eval (RequestMore a) = do
       state <- get
-      newGifUrl <- liftFI (fetchGif state.topic)
-      modify \s -> if newGifUrl /= "error" 
-                      then s { gifUrl = newGifUrl  }
-                      else s { gifUrl = s.gifUrl }
+      newGifUrlFn <- liftFI (fetchGif state.topic)
+      modify \s -> s { gifUrl = newGifUrlFn s.gifUrl }
       pure a
 
-fetchGif :: forall eff. String -> Aff (ajax :: AJAX | eff) String
+fetchGif :: forall eff. String -> Aff (ajax :: AJAX | eff) (String -> String)
 fetchGif topic = do
     result <- AJ.get (giphyRequestUrl topic)
     let url = readProp "data" result.response >>= readProp "image_url"
-    pure (either (const "error") id url)
+    pure (either (flip const) const url)

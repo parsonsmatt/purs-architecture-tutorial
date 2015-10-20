@@ -18,10 +18,10 @@ data Input a
 init :: Int -> State
 init i = { count: i }
 
-ui :: forall g p. (Functor g) => Component State Input g p
+ui :: forall g. (Functor g) => Component State Input g
 ui = component render eval
   where
-    render :: Render State Input p
+    render :: Render State Input
     render state =
       H.div_
         [ H.button [ E.onClick $ E.input_ Decrement ] 

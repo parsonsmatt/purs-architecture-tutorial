@@ -17,24 +17,31 @@ import Example.Three (State(), addCounter, initialState)
 
 data Input a = AddCounter a
 
-listRemUI :: forall g p. (Functor g)
-          => ParentComponentP State (Counter.State g p) Input Counter.Query g CounterSlot p
-listRemUI = component' render eval peek
+type StateP g =
+  InstalledState State (Counter.State g) Input Counter.Query g CounterSlot
+
+type QueryP =
+  Coproduct Input (ChildF CounterSlot Counter.Query)
+
+ui :: forall g. (Plus g)
+   => Component (StateP g) QueryP g
+ui = parentComponent' render eval peek
     where
-        render :: Render State Input CounterSlot
         render state =
             H.div_ [ H.h1_ [ H.text "Counters" ]
-                   , H.ul_ (map (H.slot <<< CounterSlot) state.counterArray)
+                   , H.ul_ (map mkChild state.counterArray)
                    , H.button [ E.onClick $ E.input_ AddCounter ]
                               [ H.text "Add Counter" ]
                    ]
 
-        eval :: EvalP Input State _ Input _ g CounterSlot p
+        mkChild i = H.slot (CounterSlot i) \_ -> { component: Counter.ui, initialState: installedState unit }
+
+        eval :: EvalParent Input State _ Input _ g CounterSlot
         eval (AddCounter next) = do
             modify addCounter
             pure next
 
-        peek :: Peek State _ Input _ g CounterSlot p
+        peek :: Peek (ChildF CounterSlot Counter.Query) State (Counter.State g) Input Counter.Query g CounterSlot
         peek (ChildF counterSlot (Coproduct queryAction)) =
             case queryAction of
                  Left (Rem.Remove _) ->
@@ -45,10 +52,3 @@ listRemUI = component' render eval peek
 removeCounter :: CounterSlot -> State -> State
 removeCounter (CounterSlot index) state =
     state { counterArray = filter (/= index) state.counterArray }
-
-ui :: forall g p. (Plus g)
-   => InstalledComponent State (Counter.State g p) Input Counter.Query g CounterSlot p
-ui = install' listRemUI mkCounter
-    where
-        mkCounter (CounterSlot _) =
-            createChild Counter.ui (installedState unit)

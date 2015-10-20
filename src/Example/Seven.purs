@@ -37,21 +37,24 @@ instance ordSlot :: Ord Slot where
 instance eqSlot :: Eq Slot where
   eq = gEq
 
-listUI :: forall g p s' f'. (Functor g)
-       => ParentComponent StateP s' QueryP f' g Slot p
-listUI = component render eval
+makeList :: forall g p s f. (Plus g)
+         => Component s f g
+         -> s
+         -> Component (State s f g) (Query f) g
+makeList comp initState = parentComponent render eval
   where
-    render :: Render StateP QueryP Slot
     render state =
       H.div_
         [ H.button [ E.onClick $ E.input_ AddItem ]
                    [ H.text "+" ]
         , H.button [ E.onClick $ E.input_ RemItem ]
                    [ H.text "-" ]
-        , H.ul_ (map (H.slot <<< Slot) state.itemArray)
+        , H.ul_ (map (\i -> H.slot (Slot i) (initComp comp initState)) state.itemArray)
         ]
 
-    eval :: EvalP QueryP StateP s' QueryP f' g Slot p
+    initComp :: Component s f g -> s -> Unit -> { component :: _, initialState :: _ }
+    initComp c s _ = {component: c, initialState: s}
+    eval :: EvalParent QueryP StateP s QueryP f g Slot
     eval (AddItem next) = modify addItem $> next
     eval (RemItem next) = modify remItem $> next
 
@@ -65,19 +68,11 @@ remItem :: StateP -> StateP
 remItem state = 
   state { itemArray = drop 1 state.itemArray }
 
-type State s f g p =
-  InstalledState StateP s QueryP f g Slot p
+type State s f g =
+  InstalledState StateP s QueryP f g Slot
 
 type Query f =
   Coproduct QueryP (ChildF Slot f)
 
-initialState :: forall s f g p. State s f g p
+initialState :: forall s f g p. State s f g
 initialState = installedState initialStateP
-
-makeList :: forall s f g p. (Plus g)
-         => Component s f g p
-         -> s
-         -> Component (State s f g p) (Query f) g p
-makeList comp state = install listUI mkChild
-  where
-    mkChild (Slot _) = createChild comp state
