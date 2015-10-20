@@ -54,6 +54,7 @@ makeList comp initState = parentComponent render eval
 
     initComp :: Component s f g -> s -> Unit -> { component :: _, initialState :: _ }
     initComp c s _ = {component: c, initialState: s}
+
     eval :: EvalParent QueryP StateP s QueryP f g Slot
     eval (AddItem next) = modify addItem $> next
     eval (RemItem next) = modify remItem $> next
