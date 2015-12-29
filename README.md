@@ -4,7 +4,7 @@ A port of the [Elm Architecture Tutorial](https://github.com/evancz/elm-architec
 
 ## Getting Started:
 
-1. Ensure that you've got PureScript 0.7.4.1 installed.
+1. Ensure that you've got PureScript 0.7.6 installed. (has also been tested with 0.8RC)
 2. Ensure that you've got pulp installed.
 3. Run `npm install` to get the virtual-dom dependency loaded
 4. Run `pulp dep install` to get the PureScript dependencies loaded
