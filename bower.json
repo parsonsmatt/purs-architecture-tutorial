@@ -14,6 +14,6 @@
     "purescript-console": "^0.1.0",
     "purescript-halogen": "~0.5",
     "purescript-affjax": "~0.8.1",
-    "purescript-generics": "~0.6.1"
+    "purescript-generics": "~0.7.0"
   }
 }
